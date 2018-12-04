@@ -1,10 +1,13 @@
 #load "Day01.fs"
 #load "Day02.fs"
+#load "Day03.fs"
 #load "Logger.fs"
 
+open System.IO
 open AdventOfCode2018
 open AdventOfCode2018.Day01
 open AdventOfCode2018.Day02
+open AdventOfCode2018.Day03
 
 let dayOne () =
   let logger = new LoggingBuilder("Day One\n-------------")
@@ -31,5 +34,14 @@ let dayTwo () =
     return (actualPartOne, actualPartTwo)
   }
 
+let dayThree () =
+  let logger = new LoggingBuilder("Day Three\n--------------")
+  let inputs = Seq.map rectOfClaim <| File.ReadAllLines "./2018/AdventOfCode2018/day-03-input"
+
+  logger {
+    return overlapArea inputs
+  }
+
 // dayOne ()
-dayTwo ()
+// dayTwo ()
+dayThree ()
