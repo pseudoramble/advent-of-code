@@ -18,11 +18,18 @@ let dayFour () =
     |> Seq.sortBy (fun log -> log.dateTime)
   let guards = guardsOfGuardLogs inputs
 
-  let partOne = (Guard.sleepiestGuard guards, Guard.sleepiestGuard guards |> fst |> Guard.sleepiestMinute)
+  let sleepiestGuard = Guard.sleepiestGuard guards
+  let sleepySchedules = 
+    Guard.sleepySchedules guards
+    |> Seq.map (fun (id, schedule) -> (id, Seq.maxBy snd schedule))
+  let maxMinuteSlept = Seq.maxBy (fun (_, minute) -> snd minute) sleepySchedules
 
-  partOne
+  let partOne = (sleepiestGuard, sleepiestGuard |> fst |> Guard.sleepiestMinute)
+  let partTwo = Seq.filter (fun (_, minute) -> minute = snd maxMinuteSlept) sleepySchedules
+
+  (partOne, partTwo)
 
 // dayOne ()
 // dayTwo ()
 // dayThree ()
-dayFour ()
+dayFour () 

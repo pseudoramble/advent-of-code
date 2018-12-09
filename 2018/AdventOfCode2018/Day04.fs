@@ -26,7 +26,7 @@ module Guard =
       logs=List.rev (action :: List.rev guard.logs)
     }
 
-  let sleepiestMinute guard =
+  let sleepySchedule guard = 
     let timeline = Array.zeroCreate 60
     Seq.toList guard.logs
     |> List.chunkBySize 2
@@ -36,9 +36,15 @@ module Guard =
         Array.set timeline minute ((Array.get timeline minute) + 1)
       ) minuteRange
     )
-    let indexedTimeline = Array.indexed timeline
-    let mostSleepy = Array.maxBy snd indexedTimeline |> snd
+    Array.indexed timeline
+
+  let sleepiestMinute guard =
+    let indexedTimeline = sleepySchedule guard
+    let mostSleepy = indexedTimeline |> Array.maxBy snd |> snd
     Array.filter (fun (i, min) -> min = mostSleepy) indexedTimeline
+
+  let sleepySchedules guards =
+    Seq.map (fun g -> (g.id, sleepySchedule g)) guards
 
   let guardSleepingTotals guards =
     Seq.map (fun guard ->
