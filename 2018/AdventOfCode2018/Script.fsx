@@ -13,20 +13,16 @@ open AdventOfCode2018.Day04
 
 let dayFour () =
   let logger = new LoggingBuilder("Day Four\n--------------")
+  let inputs = 
+    Seq.map parseGuardLog <| File.ReadAllLines "./2018/AdventOfCode2018/inputs/day-04"
+    |> Seq.sortBy (fun log -> log.dateTime)
+  let guards = guardsOfGuardLogs inputs
 
-  logger {
-    let! inputs = 
-      Seq.map parseGuardLog <| File.ReadAllLines "./2018/AdventOfCode2018/inputs/day-04"
-      |> Seq.sortBy (fun log -> log.dateTime)
-    let! guards = guardsOfGuardLogs inputs
-    let! sleepiestGuard = Guard.sleepiestGuard guards
-    let! sleepiestMinute = Guard.sleepiestMinute (fst sleepiestGuard)
+  let partOne = (Guard.sleepiestGuard guards, Guard.sleepiestGuard guards |> fst |> Guard.sleepiestMinute)
 
-    return (sleepiestGuard, sleepiestMinute)
-  }
+  partOne
 
 // dayOne ()
 // dayTwo ()
 // dayThree ()
 dayFour ()
- 

@@ -32,14 +32,15 @@ module Guard =
     |> List.chunkBySize 2
     |> Seq.iter (fun [a; b] ->
       let minuteRange = [a.dateTime.Minute .. b.dateTime.Minute]
-      printfn "%A" minuteRange
       Seq.iter (fun minute -> 
         Array.set timeline minute ((Array.get timeline minute) + 1)
       ) minuteRange
     )
-    Array.indexed timeline |> Array.maxBy snd
+    let indexedTimeline = Array.indexed timeline
+    let mostSleepy = Array.maxBy snd indexedTimeline |> snd
+    Array.filter (fun (i, min) -> min = mostSleepy) indexedTimeline
 
-  let sleepiestGuard guards =
+  let guardSleepingTotals guards =
     Seq.map (fun guard ->
       let sleepyMinutes =
         Seq.toList guard.logs
@@ -49,6 +50,9 @@ module Guard =
         )
       (guard, sleepyMinutes)
     ) guards
+
+  let sleepiestGuard guards = 
+    guardSleepingTotals guards
     |> Seq.maxBy snd
     
 module Day04 =
