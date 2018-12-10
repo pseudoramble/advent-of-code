@@ -61,8 +61,34 @@ let dayFour () =
   let partTwo = Seq.filter (fun (_, minute) -> minute = snd maxMinuteSlept) sleepySchedules
 
   (partOne, partTwo)
- 
+
+let dayFive () =
+  let logger = new LoggingBuilder("Day Five\n--------------")
+  let input = File.ReadAllText "./2018/AdventOfCode2018/inputs/day-05"
+
+  let unitPair (polymer: string) currentUnit =
+    if String.length polymer > 0
+    then
+      let recentUnit = polymer.Substring(polymer.Length - 1).Chars(0)
+      if (abs ((int recentUnit) - (int currentUnit))) = 32
+      then Some (recentUnit, currentUnit)
+      else None
+    else None    
+
+  let collapseUnitPairs polymer currentUnit =
+    match unitPair polymer currentUnit with
+    | Some (a, b) -> polymer.Substring(0, polymer.Length - 1)
+    | None -> polymer + currentUnit.ToString()
+
+
+  logger {
+    let! collapsedPolymer = Seq.fold collapseUnitPairs "" (input.Trim().ToCharArray())
+    let! len = String.length collapsedPolymer
+    return (collapsedPolymer, len)
+  }
+
 // dayOne ()
 // dayTwo ()
 // dayThree ()
-dayFour () 
+// dayFour () 
+dayFive () 
